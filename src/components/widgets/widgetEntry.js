@@ -1,9 +1,9 @@
 import React from "react";
 import "./widgetEntry.css";
 
-export default function WidgetEntry({ title, subtitle, image }) {
+export default function WidgetEntry({ title, subtitle, image, onClick }) {
   return (
-    <div className="entry-body flex">
+    <div className="entry-body flex" onClick={onClick}>
       <img src={image} alt={title} className="entry-image" />
       <div className="entry-right-body flex">
         <p className="entry-title">{title}</p>

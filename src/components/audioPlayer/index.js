@@ -12,31 +12,41 @@ export default function AudioPLayer({
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [trackProgress, setTrackProgress] = useState(0);
-  var audioSrc = total[currentIndex]?.track.preview_url;
 
-  const audioRef = useRef(new Audio(total[0]?.track.preview_url));
+  const audioSrc =
+    total[currentIndex]?.preview_url || total[currentIndex]?.track?.preview_url;
+
+  console.log("🚀 AudioPlayer received:", currentTrack);
+
+  if (!currentTrack?.preview_url) {
+    console.warn("❌ Missing preview_url in currentTrack:", currentTrack);
+  } else {
+    console.log("✅ Valid preview_url:", currentTrack.preview_url);
+  }
+
+  const audioRef = useRef(
+    new Audio(total[0]?.preview_url || total[0]?.track?.preview_url)
+  );
 
   const intervalRef = useRef();
-
   const isReady = useRef(false);
-
   const { duration } = audioRef.current;
-
   const currentPercentage = duration ? (trackProgress / duration) * 100 : 0;
 
   const startTimer = () => {
     clearInterval(intervalRef.current);
-
     intervalRef.current = setInterval(() => {
       if (audioRef.current.ended) {
         handleNext();
       } else {
         setTrackProgress(audioRef.current.currentTime);
       }
-    }, [1000]);
+    }, 1000);
   };
 
   useEffect(() => {
+    if (!currentTrack?.preview_url) return;
+
     if (audioRef.current.src) {
       if (isPlaying) {
         audioRef.current.play();
@@ -58,9 +68,10 @@ export default function AudioPLayer({
   }, [isPlaying]);
 
   useEffect(() => {
+    if (!currentTrack?.preview_url) return;
+
     audioRef.current.pause();
     audioRef.current = new Audio(audioSrc);
-
     setTrackProgress(audioRef.current.currentTime);
 
     if (isReady.current) {
@@ -93,10 +104,12 @@ export default function AudioPLayer({
   const addZero = (n) => {
     return n > 9 ? "" + n : "0" + n;
   };
+
   const artists = [];
   currentTrack?.album?.artists.forEach((artist) => {
     artists.push(artist.name);
   });
+
   return (
     <div className="player-body flex">
       <div className="player-left-body">

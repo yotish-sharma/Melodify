@@ -14,7 +14,11 @@ export default function Player() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (location.state) {
+    console.log("📦 Location State:", location.state);
+    if (location.state?.isFavorites) {
+      setTracks(location.state.tracks);
+      setCurrentIndex(location.state.index);
+    } else if (location.state) {
       apiClient
         .get("playlists/" + location.state?.id + "/tracks")
         .then((res) => {
@@ -25,8 +29,16 @@ export default function Player() {
   }, [location.state]);
 
   useEffect(() => {
-    setCurrentTrack(tracks[currentIndex]?.track);
-  }, [currentIndex, tracks]);
+    if (tracks.length > 0) {
+      if (location.state?.isFavorites) {
+        setCurrentTrack(tracks[currentIndex]);
+        console.log("🎧 Current Track set (Favorites):", tracks[currentIndex]);
+      } else {
+        setCurrentTrack(tracks[currentIndex]?.track);
+        console.log("🎧 Current Track set (Playlist):", tracks[currentIndex]?.track);
+      }
+    }
+  }, [currentIndex, tracks, location.state]);
 
   return (
     <div className="screen-container flex">
@@ -37,7 +49,10 @@ export default function Player() {
           currentIndex={currentIndex}
           setCurrentIndex={setCurrentIndex}
         />
-        <Widgets artistID={currentTrack?.album?.artists[0]?.id} />
+        <Widgets
+          artistID={currentTrack?.album?.artists[0]?.id}
+          currentlyPlaying={currentTrack}
+        />
       </div>
       <div className="right-player-body">
         <SongCard album={currentTrack?.album} />

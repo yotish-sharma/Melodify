@@ -7,16 +7,19 @@ export default function Queue({ tracks, setCurrentIndex }) {
       <div className="queue flex">
         <p className="upNext">Up Next</p>
         <div className="queue-list">
-          {tracks?.map((track, index) => (
-            <div
-              key={index + "key"}
-              className="queue-item flex"
-              onClick={() => setCurrentIndex(index)}
-            >
-              <p className="track-name">{track?.track?.name}</p>
-              <p>0:30</p>
-            </div>
-          ))}
+          {tracks?.map((track, index) => {
+            const actualTrack = track.track || track;
+            return (
+              <div
+                key={index + "key"}
+                className="queue-item flex"
+                onClick={() => setCurrentIndex(index)}
+              >
+                <p className="track-name">{actualTrack?.name}</p>
+                <p>0:30</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

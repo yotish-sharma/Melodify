@@ -12,6 +12,13 @@
   padding: 1% 3%;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
+  overflow-y: auto;
+  max-height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-text-overflow: none;
 }
 
 .widgetcard-body:hover {
@@ -47,4 +54,28 @@
 
 .widgetcard-body:hover .widget-fade {
   opacity: 1;
+}
+
+.widgetcard-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.widgetcard-body::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.widgetcard-body::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+
+.widget-song-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
